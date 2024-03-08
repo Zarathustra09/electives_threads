@@ -5,8 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - electives_threads</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/_Layout.cshtml.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/electives_threads.styles.css" asp-append-version="true" />
+
+    @if (ViewContext.ActionDescriptor.DisplayName.Contains("UserLogin"))
+    {
+                <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    }
 </head>
 <body>
     <header>
@@ -39,7 +44,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer">
         <div class="container">
             &copy; 2024 - electives_threads - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>

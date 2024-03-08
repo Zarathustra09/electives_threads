@@ -4,9 +4,14 @@ namespace electives_threads.Controllers
 {
     public class UserLogin : Controller
     {
-        public IActionResult Index()
+        
+public IActionResult Index()
+
         {
-            return View("~/Views/UserLogin/Index.cshtml");
+
+            return View("~/Views/UserLogin/Index.cshtml", null);
+
         }
+
     }
 }
