@@ -1,0 +1,27 @@
+﻿@model List<electives_threads.Models.Thread>
+
+@{
+    ViewData["Title"] = "Thread Index";
+}
+
+<h1>Thread Index</h1>
+
+@if (Model == null || Model.Count == 0)
+{
+    <p>No threads found.</p>
+}
+else
+{
+    <div class="list-group">
+        @foreach (var thread in Model)
+        {
+            <a href="@Url.Action("Details", "Threads", new { id = thread.ThreadID })" class="list-group-item list-group-item-action">
+                <h5 class="mb-1">@thread.Title</h5>
+                <p class="mb-1">@thread.Content</p>
+                <small>Likes: @thread.Likes | Dislikes: @thread.Dislikes | Created At: @thread.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small>
+            </a>
+        }
+    </div>
+}
+
+<a asp-action="Create" class="btn btn-primary">Create Thread</a>
