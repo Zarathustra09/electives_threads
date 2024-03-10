@@ -56,7 +56,7 @@ namespace electives_threads.Controllers
             HttpContext.SignOutAsync();
 
             // Redirect to the home page or any other page after logout
-            return RedirectToAction("Index", "Threads");
+            return RedirectToAction("Index", "UserLogin");
         }
     }
 }

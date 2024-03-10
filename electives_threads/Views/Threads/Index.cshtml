@@ -4,24 +4,39 @@
     ViewData["Title"] = "Thread Index";
 }
 
-<h1>Thread Index</h1>
+<h1>NU Threads</h1>
 
 @if (Model == null || Model.Count == 0)
 {
-    <p>No threads found.</p>
+        <p>No threads found.</p>
 }
 else
 {
-    <div class="list-group">
+    <div class="list-group pt-3">
         @foreach (var thread in Model)
         {
-            <a href="@Url.Action("Details", "Threads", new { id = thread.ThreadID })" class="list-group-item list-group-item-action">
-                <h5 class="mb-1">@thread.Title</h5>
-                <p class="mb-1">@thread.Content</p>
-                <small>Likes: @thread.Likes | Dislikes: @thread.Dislikes | Created At: @thread.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small>
-            </a>
+                <a href="@Url.Action("Index", "Comments", new { id = thread.ThreadID })" class="list-group-item list-group-item-action">
+                @if (thread.PhotoData != null && thread.PhotoData.Length > 0)
+                {
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(thread.PhotoData)" class="img-thumbnail" alt="Thread Photo" style="max-width: 150px;" />
+                }
+                    <h5 class="mb-1">@thread.Title</h5>
+                    <p class="mb-1">@thread.Content</p>
+                    <small>Likes: @thread.Likes | Dislikes: @thread.Dislikes | Created At: @thread.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small>
+
+                    <div class="d-inline">
+                        <form method="post" asp-action="Like" asp-route-id="@thread.ThreadID">
+                            <button type="submit" class="btn btn-success">Like</button>
+                        </form>
+
+                        <form method="post" asp-action="Dislike" asp-route-id="@thread.ThreadID">
+                            <button type="submit" class="btn btn-danger">Dislike</button>
+                        </form>
+                    </div>
+                </a>
         }
     </div>
+
 }
 
 <a asp-action="Create" class="btn btn-primary">Create Thread</a>

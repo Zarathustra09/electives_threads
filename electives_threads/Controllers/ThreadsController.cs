@@ -30,9 +30,10 @@ namespace electives_threads.Controllers
         {
             return View();
         }
-  
+
         [HttpPost]
-        public async Task<IActionResult> Create(electives_threads.Models.Thread thread)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(electives_threads.Models.Thread thread, IFormFile photo)
         {
             if (ModelState.IsValid)
             {
@@ -44,6 +45,17 @@ namespace electives_threads.Controllers
                 {
                     // Set the USER_ID property of the thread
                     thread.UserID = userId.Value;
+
+                    // Handle photo upload
+                    if (photo != null && photo.Length > 0)
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await photo.CopyToAsync(memoryStream);
+                            thread.PhotoData = memoryStream.ToArray();
+                            thread.PhotoFileName = photo.FileName;
+                        }
+                    }
 
                     thread.CreatedAt = DateTime.Now;
                     thread.UpdatedAt = DateTime.Now;
@@ -62,5 +74,46 @@ namespace electives_threads.Controllers
 
             return View(thread);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Like(int id)
+        {
+            var thread = await _dbContext.Threads.FindAsync(id);
+            if (thread == null)
+            {
+                return NotFound();
+            }
+
+            // Increase the likes count
+            thread.Likes++;
+
+            _dbContext.Update(thread);
+            await _dbContext.SaveChangesAsync();
+
+            // Redirect back to the thread index page
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Dislike(int id)
+        {
+            var thread = await _dbContext.Threads.FindAsync(id);
+            if (thread == null)
+            {
+                return NotFound();
+            }
+
+            // Increase the dislikes count
+            thread.Dislikes++;
+
+            _dbContext.Update(thread);
+            await _dbContext.SaveChangesAsync();
+
+            // Redirect back to the thread index page
+            return RedirectToAction("Index");
+        }
+
     }
 }

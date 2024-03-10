@@ -3,25 +3,27 @@ using System.ComponentModel.DataAnnotations;
 
 namespace electives_threads.Models
 {
-    public class Thread
+    public class Comment
     {
-        public int ThreadID { get; set; }
+        public int CommentID { get; set; }
 
+        [Required]
         public int UserID { get; set; }
 
-        [Required(ErrorMessage = "Title is required")]
-        public string Title { get; set; }
+        [Required]
+        public int ThreadID { get; set; }
 
-        [Required(ErrorMessage = "Content is required")]
+        [Required]
         public string Content { get; set; }
 
-
-        public byte[]? PhotoData { get; set; } 
-        public string? PhotoFileName { get; set; } 
-
         public int Likes { get; set; }
+
         public int Dislikes { get; set; }
+
         public DateTime CreatedAt { get; set; }
+
         public DateTime UpdatedAt { get; set; }
+
+  
     }
 }
