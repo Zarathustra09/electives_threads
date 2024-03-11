@@ -4,36 +4,58 @@
     ViewData["Title"] = "Comment Index";
 }
 
-<h1>Comment Index</h1>
-
 @if (Model == null || Model.Count == 0)
 {
         <p>No comments found.</p>
 }
 else
 {
-        <ul>
+        <div class="container mt-4">
         @foreach (var comment in Model)
         {
-                    <li>
-                        <strong>User ID:</strong> @comment.UserID<br />
-                        <strong>Thread ID:</strong> @comment.ThreadID<br />
-                        <strong>Content:</strong> @comment.Content<br />
-                        <strong>Likes:</strong> @comment.Likes<br />
-                        <strong>Dislikes:</strong> @comment.Dislikes<br />
-                        <strong>Created At:</strong> @comment.CreatedAt<br />
-                        <strong>Updated At:</strong> @comment.UpdatedAt
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title"> @ViewBag.Username</h5>
+                            <p class="card-text">@comment.Content</p>
+                            <p class="card-text"><small class="text-muted">Likes: @comment.Likes | Dislikes: @comment.Dislikes</small></p>
+                            <p class="card-text"><small class="text-muted">Created: @comment.CreatedAt.ToString("MMM dd, yyyy")</small></p>
+                            <p class="card-text"><small class="text-muted">Age: @CalculateAge(comment.CreatedAt)</small></p>
 
-                                <!-- Like and Dislike buttons -->
-                        <form method="post" asp-action="Like" asp-route-threadId="@ViewBag.ThreadID">
-                            <button type="submit" class="btn btn-success">Like</button>
-                        </form>
+                                    <div>
+                            <strong>Comment By:</strong> @ViewBag.UserNames[comment.CommentID]
+                        </div>
 
-                        <form method="post" asp-action="Dislike" asp-route-threadId="@ViewBag.ThreadID">
-                            <button type="submit" class="btn btn-danger">Dislike</button>
-                        </form>
-                    </li>
+                            <!-- Like and Dislike buttons -->
+                            <form method="post" asp-action="Like" asp-route-commentId="@comment.CommentID">
+                                <button type="submit" class="btn btn-outline-success btn-sm mr-2">Like</button>
+                            </form>
+
+                            <form method="post" asp-action="Dislike" asp-route-commentId="@comment.CommentID">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Dislike</button>
+                            </form>
+                        </div>
+                    </div>
         }
-        </ul>
+        </div>
 }
+
 <a asp-action="Create" class="btn btn-primary">Create Comment</a>
+
+@functions {
+    public string CalculateAge(DateTime createdAt)
+    {
+        var age = DateTime.Now - createdAt;
+        if (age.Days > 0)
+        {
+            return $"{age.Days} days ago";
+        }
+        else if (age.Hours > 0) 
+        {
+            return $"{age.Hours} hours ago";
+        }
+        else
+        {
+            return $"{age.Minutes} minutes ago";
+        }
+    }
+}

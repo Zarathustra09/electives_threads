@@ -11,22 +11,35 @@ namespace electives_threads.Controllers
     {
         private readonly MySqlDbContext _dbContext;
 
+        private static int _id;
+
         public CommentsController(MySqlDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int threadId)
         {
-            List<Comment> comments = await _dbContext.Comments.ToListAsync();
+            var comments = await _dbContext.Comments.Where(c => c.ThreadID == threadId).ToListAsync();
+
+            // Fetch usernames for comment creators
+            var userNames = new Dictionary<int, string>();
+            foreach (var comment in comments)
+            {
+                var user = await _dbContext.Users.FindAsync(comment.UserID);
+                userNames[comment.CommentID] = user?.Username;
+            }
+
+            // Pass the usernames to the view using ViewBag
+            ViewBag.UserNames = userNames;
+
             return View(comments);
         }
 
 
         [HttpGet]
-        public IActionResult Create(int threadId)
+        public IActionResult Create()
         {
-            ViewBag.ThreadID = threadId;
             return View();
         }
 
@@ -44,7 +57,7 @@ namespace electives_threads.Controllers
                 {
                     // Set the UserID and ThreadID for the comment
                     comment.UserID = userId.Value;
-                    comment.ThreadID = ViewBag.ThreadID;
+                    comment.ThreadID = _id;
 
                     // Set the CreatedAt and UpdatedAt properties
                     comment.CreatedAt = DateTime.Now;
@@ -55,7 +68,8 @@ namespace electives_threads.Controllers
                     await _dbContext.SaveChangesAsync();
 
                     // Redirect to the index action of Threads controller
-                    return RedirectToAction("Index", "Threads");
+                    return RedirectToAction("Index", "Comments", new { threadId = _id });
+
                 }
                 else
                 {
@@ -66,19 +80,38 @@ namespace electives_threads.Controllers
 
             return View(comment);
         }
-
         [HttpPost]
-        public async Task<IActionResult> Like(int threadId)
+        public async Task<IActionResult> Like(int commentId)
         {
-            // Implement like functionality
-            return RedirectToAction("Index", "Threads");
+            // Find the comment by commentId
+            var comment = await _dbContext.Comments.FindAsync(commentId);
+            if (comment != null)
+            {
+                // Increment the Likes count
+                comment.Likes++;
+                // Update the database
+                await _dbContext.SaveChangesAsync();
+            }
+
+            // Redirect back to the thread's comments
+            return RedirectToAction("Index", "Comments", new { threadId = _id });
         }
 
         [HttpPost]
-        public async Task<IActionResult> Dislike(int threadId)
+        public async Task<IActionResult> Dislike(int commentId)
         {
-            // Implement dislike functionality
-            return RedirectToAction("Index", "Threads");
+            // Find the comment by commentId
+            var comment = await _dbContext.Comments.FindAsync(commentId);
+            if (comment != null)
+            {
+                // Increment the Dislikes count
+                comment.Dislikes++;
+                // Update the database
+                await _dbContext.SaveChangesAsync();
+            }
+
+            // Redirect back to the thread's comments
+            return RedirectToAction("Index", "Comments", new { threadId = _id });
         }
     }
 }

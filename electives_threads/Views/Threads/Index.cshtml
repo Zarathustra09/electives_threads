@@ -15,7 +15,7 @@ else
     <div class="list-group pt-3">
         @foreach (var thread in Model)
         {
-                <a href="@Url.Action("Index", "Comments", new { id = thread.ThreadID })" class="list-group-item list-group-item-action">
+                <a href="@Url.Action("Index", "Comments", new { threadId = thread.ThreadID })" class="list-group-item list-group-item-action">
                 @if (thread.PhotoData != null && thread.PhotoData.Length > 0)
                 {
                             <img src="data:image/jpeg;base64,@Convert.ToBase64String(thread.PhotoData)" class="img-thumbnail" alt="Thread Photo" style="max-width: 150px;" />
@@ -23,6 +23,11 @@ else
                     <h5 class="mb-1">@thread.Title</h5>
                     <p class="mb-1">@thread.Content</p>
                     <small>Likes: @thread.Likes | Dislikes: @thread.Dislikes | Created At: @thread.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small>
+
+                    <div>
+                    <strong>Created By:</strong> @ViewBag.UserNames[thread.ThreadID]
+                </div>
+
 
                     <div class="d-inline">
                         <form method="post" asp-action="Like" asp-route-id="@thread.ThreadID">

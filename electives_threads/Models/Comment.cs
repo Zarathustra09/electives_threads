@@ -10,8 +10,8 @@ namespace electives_threads.Models
         [Required]
         public int UserID { get; set; }
 
-        [Required]
-        public int ThreadID { get; set; }
+     
+        public int? ThreadID { get; set; }
 
         [Required]
         public string Content { get; set; }
@@ -24,6 +24,9 @@ namespace electives_threads.Models
 
         public DateTime UpdatedAt { get; set; }
 
-  
+
+     
+
+
     }
 }

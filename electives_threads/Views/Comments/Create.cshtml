@@ -9,18 +9,15 @@
 <form asp-action="Create" method="post">
     @Html.AntiForgeryToken()
 
+    <input type="hidden" name="threadId" value="@ViewBag.ThreadID" /> <!-- Add this hidden field -->
+
     <div class="form-group">
         <label asp-for="Content" class="control-label"></label>
         <textarea asp-for="Content" class="form-control" rows="4"></textarea>
         <span asp-validation-for="Content" class="text-danger"></span>
     </div>
 
-
-    <input type="hidden" asp-for="ThreadID" value="@ViewBag.ThreadID" />
-
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </form>
-
-

@@ -21,8 +21,19 @@ namespace electives_threads.Controllers
         public async Task<IActionResult> Index()
         {
             var threads = await _dbContext.Threads.ToListAsync();
-            return View(threads);
 
+            // Fetch usernames for thread creators
+            var userNames = new Dictionary<int, string>();
+            foreach (var thread in threads)
+            {
+                var user = await _dbContext.Users.FindAsync(thread.UserID);
+                userNames[thread.ThreadID] = user?.Username;
+            }
+
+            // Pass the usernames to the view using ViewBag
+            ViewBag.UserNames = userNames;
+
+            return View(threads);
         }
 
         [HttpGet]
