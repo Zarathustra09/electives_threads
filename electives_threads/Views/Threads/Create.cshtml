@@ -2,31 +2,69 @@
 
 @{
     ViewData["Title"] = "Create Thread";
+    Layout = null;
 }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+<!-- MDB -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.min.css" rel="stylesheet" />
+<!-- Icon -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
-<h1>Create Thread</h1>
-<form asp-action="Create" method="post" enctype="multipart/form-data">
-    @Html.AntiForgeryToken()
-    <div class="form-group">
-        <label asp-for="Title" class="control-label"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1c1c1c;">
+    <div class="container">
+        <!-- Logo and text on the left side -->
+        <a class="navbar-brand" asp-area="" asp-controller="Threads" asp-action="Index">
+        <img src="..\img\a.jpg" alt="Logo" width="60" height="50" class="img-fluid rounded my-2 me-5 d-inline-block align-top">
+        <span class="text-warning">NU</span> <span class="text-primary">Threads</span>
+    </a>
+        <!-- Home and Logout buttons on the right side -->
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" asp-area="" asp-controller="Threads" asp-action="Index">Home</a>
+                </li>
+                <li class="nav-item">
+                    <form method="post" asp-controller="UserLogin" asp-action="Logout">
+                        <button type="submit" class="nav-link btn btn-link text-white" style="text-transform: none; font-weight: normal;">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
     </div>
+</nav>
 
-    <div class="form-group">
-        <label asp-for="Content" class="control-label"></label>
-        <textarea asp-for="Content" class="form-control" rows="5"></textarea>
-        <span asp-validation-for="Content" class="text-danger"></span>
+<section style="background-color: #1c1c1c; color: white; min-height: 100vh;">
+    <div class="container my-5 py-5">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-6">
+                <h1>Create Thread</h1>
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label"></label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Content" class="form-label"></label>
+                        <textarea asp-for="Content" class="form-control" rows="5"></textarea>
+                        <span asp-validation-for="Content" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="photo" class="form-label">Upload Photo:</label>
+                        <input type="file" id="photo" name="photo" class="form-control">
+                        <small class="form-text text-danger">File size must be less than 1MB.</small>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a asp-action="Index" class="btn btn-secondary float-end">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-
-
-        <div class="form-group">
-        <label for="photo">Upload Photo:</label>
-        <input type="file" id="photo" name="photo" class="form-control-file">
-    </div>
-
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-    </div>
-</form>
+</section>
